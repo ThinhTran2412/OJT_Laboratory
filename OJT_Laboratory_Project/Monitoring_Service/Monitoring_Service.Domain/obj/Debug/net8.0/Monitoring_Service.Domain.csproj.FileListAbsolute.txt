@@ -1,0 +1,11 @@
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\bin\Debug\net8.0\Monitoring_Service.Domain.deps.json
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\bin\Debug\net8.0\Monitoring_Service.Domain.dll
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\bin\Debug\net8.0\Monitoring_Service.Domain.pdb
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\obj\Debug\net8.0\Monitoring_Service.Domain.GeneratedMSBuildEditorConfig.editorconfig
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\obj\Debug\net8.0\Monitoring_Service.Domain.AssemblyInfoInputs.cache
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\obj\Debug\net8.0\Monitoring_Service.Domain.AssemblyInfo.cs
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\obj\Debug\net8.0\Monitoring_Service.Domain.csproj.CoreCompileInputs.cache
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\obj\Debug\net8.0\Monitoring_Service.Domain.dll
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\obj\Debug\net8.0\refint\Monitoring_Service.Domain.dll
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\obj\Debug\net8.0\Monitoring_Service.Domain.pdb
+F:\OJT_Assigment\OJT_Project\Deploy\OJT_Laboratory_Project\Monitoring_Service\Monitoring_Service.Domain\obj\Debug\net8.0\ref\Monitoring_Service.Domain.dll

@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package patient_service;
+
+option csharp_namespace = "Laboratory_Service.API.Protos";
+
+// Service định nghĩa các phương thức gRPC cho Patient Service
+service PatientService {
+  // Lấy thông tin Patient theo IdentifyNumber (Citizen ID)
+  rpc GetPatientByIdentifyNumber(GetPatientByIdentifyNumberRequest) returns (GetPatientByIdentifyNumberResponse);
+  
+  // Kiểm tra Patient có tồn tại theo IdentifyNumber không
+  rpc CheckPatientExists(CheckPatientExistsRequest) returns (CheckPatientExistsResponse);
+  
+  // Tạo Patient mới từ thông tin User
+  rpc CreatePatientFromUser(CreatePatientFromUserRequest) returns (CreatePatientFromUserResponse);
+  
+  // Lấy danh sách Medical Records của Patient theo IdentifyNumber
+  rpc GetMedicalRecordsByIdentifyNumber(GetMedicalRecordsByIdentifyNumberRequest) returns (GetMedicalRecordsByIdentifyNumberResponse);
+  
+  // Lấy danh sách Patient theo danh sách IdentifyNumber
+  rpc GetPatientsByIdentifyNumbers(GetPatientsByIdentifyNumbersRequest) returns (GetPatientsByIdentifyNumbersResponse);
+}
+
+// Request để lấy Patient theo IdentifyNumber
+message GetPatientByIdentifyNumberRequest {
+  string identify_number = 1; // Căn cước công dân
+}
+
+// Response trả về thông tin Patient
+message GetPatientByIdentifyNumberResponse {
+  bool success = 1;
+  string message = 2;
+  PatientData patient = 3;
+}
+
+// Request để kiểm tra Patient có tồn tại không
+message CheckPatientExistsRequest {
+  string identify_number = 1; // Căn cước công dân
+}
+
+// Response kiểm tra Patient tồn tại
+message CheckPatientExistsResponse {
+  bool success = 1;
+  string message = 2;
+  bool exists = 3;
+}
+
+// Request để tạo Patient từ thông tin User
+message CreatePatientFromUserRequest {
+  UserData user = 1; // Thông tin User từ IAM Service
+  string created_by = 2; // User tạo Patient record
+}
+
+// Response tạo Patient
+message CreatePatientFromUserResponse {
+  bool success = 1;
+  string message = 2;
+  PatientData patient = 3;
+}
+
+// Request để lấy Medical Records theo IdentifyNumber
+message GetMedicalRecordsByIdentifyNumberRequest {
+  string identify_number = 1; // Căn cước công dân
+  int32 page_number = 2; // Số trang (optional, default = 1)
+  int32 page_size = 3; // Kích thước trang (optional, default = 10)
+}
+
+// Response trả về danh sách Medical Records
+message GetMedicalRecordsByIdentifyNumberResponse {
+  bool success = 1;
+  string message = 2;
+  repeated MedicalRecordData medical_records = 3;
+  int32 total_count = 4;
+  int32 page_number = 5;
+  int32 page_size = 6;
+}
+
+// Request để lấy nhiều Patient theo danh sách IdentifyNumber
+message GetPatientsByIdentifyNumbersRequest {
+  repeated string identify_numbers = 1; // Danh sách căn cước công dân
+}
+
+// Response trả về danh sách Patient
+message GetPatientsByIdentifyNumbersResponse {
+  bool success = 1;
+  string message = 2;
+  repeated PatientData patients = 3;
+}
+
+// Cấu trúc dữ liệu Patient
+message PatientData {
+  int32 patient_id = 1;
+  string identify_number = 2; // Căn cước công dân - khóa liên kết
+  string full_name = 3;
+  string date_of_birth = 4; // Format: YYYY-MM-DD
+  string gender = 5;
+  string phone_number = 6;
+  string email = 7;
+  string address = 8;
+  int32 age = 9;
+  string created_at = 10; // Format: ISO 8601
+  string updated_at = 11; // Format: ISO 8601
+  string created_by = 12;
+}
+
+// Cấu trúc dữ liệu Medical Record
+message MedicalRecordData {
+  int32 medical_record_id = 1;
+  int32 patient_id = 2;
+  string identify_number = 3; // Căn cước công dân của Patient
+  string test_type = 4;
+  string test_results = 5;
+  string reference_ranges = 6;
+  string interpretation = 7;
+  string instrument_used = 8;
+  string batch_number = 9;
+  string lot_number = 10;
+  string clinical_notes = 11;
+  string error_messages = 12;
+  string test_date = 13; // Format: ISO 8601
+  string results_date = 14; // Format: ISO 8601
+  string status = 15;
+  string priority = 16;
+  string created_at = 17; // Format: ISO 8601
+  string updated_at = 18; // Format: ISO 8601
+  string created_by = 19;
+  string updated_by = 20;
+}
+
+// Cấu trúc dữ liệu User (được sử dụng khi tạo Patient từ User)
+message UserData {
+  int32 user_id = 1;
+  string full_name = 2;
+  string email = 3;
+  string phone_number = 4;
+  string identify_number = 5; // Căn cước công dân - khóa liên kết
+  string gender = 6;
+  int32 age = 7;
+  string address = 8;
+  string date_of_birth = 9; // Format: YYYY-MM-DD
+  int32 role_id = 10;
+  string role_name = 11;
+  bool is_active = 12;
+}

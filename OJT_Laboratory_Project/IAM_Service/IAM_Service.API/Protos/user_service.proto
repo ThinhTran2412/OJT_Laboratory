@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package user_service;
+
+option csharp_namespace = "IAM_Service.API.Protos";
+
+// Service định nghĩa các phương thức gRPC cho User Service
+service UserService {
+  // Lấy thông tin User theo IdentifyNumber (Citizen ID)
+  rpc GetUserByIdentifyNumber(GetUserByIdentifyNumberRequest) returns (GetUserByIdentifyNumberResponse);
+  
+  // Kiểm tra User có tồn tại theo IdentifyNumber không
+  rpc CheckUserExists(CheckUserExistsRequest) returns (CheckUserExistsResponse);
+  
+  // Lấy danh sách User theo danh sách IdentifyNumber
+  rpc GetUsersByIdentifyNumbers(GetUsersByIdentifyNumbersRequest) returns (GetUsersByIdentifyNumbersResponse);
+
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+}
+
+// Request để lấy User theo IdentifyNumber
+message GetUserByIdentifyNumberRequest {
+  string identify_number = 1; // Căn cước công dân
+}
+
+// Response trả về thông tin User
+message GetUserByIdentifyNumberResponse {
+  bool success = 1;
+  string message = 2;
+  UserData user = 3;
+}
+
+// Request để kiểm tra User có tồn tại không
+message CheckUserExistsRequest {
+  string identify_number = 1; // Căn cước công dân
+}
+
+// Response kiểm tra User tồn tại
+message CheckUserExistsResponse {
+  bool success = 1;
+  string message = 2;
+  bool exists = 3;
+}
+
+// Request để lấy nhiều User theo danh sách IdentifyNumber
+message GetUsersByIdentifyNumbersRequest {
+  repeated string identify_numbers = 1; // Danh sách căn cước công dân
+}
+
+// Response trả về danh sách User
+message GetUsersByIdentifyNumbersResponse {
+  bool success = 1;
+  string message = 2;
+  repeated UserData users = 3;
+}
+
+// Cấu trúc dữ liệu User
+message UserData {
+  int32 user_id = 1;
+  string full_name = 2;
+  string email = 3;
+  string phone_number = 4;
+  string identify_number = 5; // Căn cước công dân - khóa liên kết
+  string gender = 6;
+  int32 age = 7;
+  string address = 8;
+  string date_of_birth = 9; // Format: YYYY-MM-DD
+  int32 role_id = 10;
+  string role_name = 11;
+  bool is_active = 12;
+  string created_at = 13; // Format: ISO 8601
+  string updated_at = 14; // Format: ISO 8601
+}
+
+message CreateUserRequest {
+  string identify_number = 1;
+  string full_name = 2;
+  string date_of_birth = 3; // yyyy-MM-dd
+  string gender = 4;
+  string phone_number = 5;
+  string email = 6;
+  string address = 7;
+  int32 role_id = 8;
+  int32 age = 9; 
+}
+
+
+message CreateUserResponse {
+  bool success = 1;
+  string message = 2;
+  UserData user = 3;
+}

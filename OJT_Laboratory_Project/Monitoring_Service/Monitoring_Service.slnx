@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Monitoring_Service.API/Monitoring_Service.API.csproj" />
+  <Project Path="Monitoring_Service.Application/Monitoring_Service.Application.csproj" />
+  <Project Path="Monitoring_Service.Domain/Monitoring_Service.Domain.csproj" />
+  <Project Path="Monitoring_Service.Infastructure/Monitoring_Service.Infastructure.csproj" />
+</Solution>

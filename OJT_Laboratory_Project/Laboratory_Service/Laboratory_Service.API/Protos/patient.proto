@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+option csharp_namespace = "Laboratory_Service.API.Protos";
+
+package patient;
+
+service PatientService {
+  rpc GetPatientById (PatientRequest) returns (PatientResponse);
+  rpc GetPatientWithMedicalRecords (PatientRequest) returns (PatientWithMedicalRecordsResponse);
+  rpc GetPatientByIdentifyNumber (GetPatientByIdentifyNumberRequest) returns (GetPatientByIdentifyNumberResponse);
+  rpc CheckPatientExists (CheckPatientExistsRequest) returns (CheckPatientExistsResponse);
+  rpc CreatePatientFromUser (CreatePatientFromUserRequest) returns (CreatePatientFromUserResponse);
+  rpc GetMedicalRecordsByIdentifyNumber (GetMedicalRecordsByIdentifyNumberRequest) returns (GetMedicalRecordsByIdentifyNumberResponse);
+  rpc GetPatientsByIdentifyNumbers (GetPatientsByIdentifyNumbersRequest) returns (GetPatientsByIdentifyNumbersResponse);
+}
+
+message PatientRequest {
+  int32 patientId = 1;
+  string identifyNumber = 2;
+}
+
+message PatientResponse {
+  int32 patientId = 1;
+  string fullName = 2;
+  string identifyNumber = 3;
+  string dateOfBirth = 4;
+  string gender = 5;
+  string phoneNumber = 6;
+  string email = 7;
+  string address = 8;
+}
+
+message MedicalRecordResponse {
+  int32 medicalRecordId = 1;
+  string testType = 2;
+  string testResults = 3;
+  string referenceRanges = 4;
+  string interpretation = 5;
+  string instrumentUsed = 6;
+  string batchNumber = 7;
+  string lotNumber = 8;
+  string clinicalNotes = 9;
+  string status = 10;
+  string priority = 11;
+  string testDate = 12;
+  string resultsDate = 13;
+}
+
+message PatientWithMedicalRecordsResponse {
+  PatientResponse patient = 1;
+  repeated MedicalRecordResponse medicalRecords = 2;
+}
+
+message PatientData {
+  int32 patientId = 1;
+  string fullName = 2;
+  string identifyNumber = 3;
+  string dateOfBirth = 4;
+  string gender = 5;
+  string phoneNumber = 6;
+  string email = 7;
+  string address = 8;
+  int32 age = 9;
+  string createdAt = 10;
+  string updatedAt = 11;
+  string createdBy = 12;
+}
+
+message MedicalRecordData {
+  int32 medicalRecordId = 1;
+  int32 patientId = 2;
+  string identifyNumber = 3;
+  string testType = 4;
+  string testResults = 5;
+  string referenceRanges = 6;
+  string interpretation = 7;
+  string instrumentUsed = 8;
+  string batchNumber = 9;
+  string lotNumber = 10;
+  string clinicalNotes = 11;
+  string status = 12;
+  string priority = 13;
+  string testDate = 14;
+  string resultsDate = 15;
+  repeated string errorMessages = 16;
+  string createdAt = 17;
+  string updatedAt = 18;
+  string createdBy = 19;
+  string updatedBy = 20;
+}
+
+message GetPatientByIdentifyNumberRequest {
+  string identifyNumber = 1;
+}
+
+message GetPatientByIdentifyNumberResponse {
+  bool success = 1;
+  string message = 2;
+  PatientData patient = 3;
+}
+
+message CheckPatientExistsRequest {
+  string identifyNumber = 1;
+}
+
+message CheckPatientExistsResponse {
+  bool exists = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message UserData {
+  string fullName = 1;
+  string identifyNumber = 2;
+  string dateOfBirth = 3;
+  string gender = 4;
+  string phoneNumber = 5;
+  string email = 6;
+  string address = 7;
+  string createdBy = 8;
+}
+
+message CreatePatientFromUserRequest {
+  UserData user = 1;
+}
+
+message CreatePatientFromUserResponse {
+  bool success = 1;
+  string message = 2;
+  int32 patientId = 3;
+  PatientData patient = 4;
+}
+
+message GetMedicalRecordsByIdentifyNumberRequest {
+  string identifyNumber = 1;
+  int32 pageNumber = 2;
+  int32 pageSize = 3;
+}
+
+message GetMedicalRecordsByIdentifyNumberResponse {
+  bool success = 1;
+  string message = 2;
+  repeated MedicalRecordData medicalRecords = 3;
+  int32 totalCount = 4;
+  int32 pageNumber = 5;
+  int32 pageSize = 6;
+}
+
+message GetPatientsByIdentifyNumbersRequest {
+  repeated string identifyNumbers = 1;
+}
+
+message GetPatientsByIdentifyNumbersResponse {
+  bool success = 1;
+  string message = 2;
+  repeated PatientData patients = 3;
+}

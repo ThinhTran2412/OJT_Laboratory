@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option csharp_namespace = "Simulator.API.Protos.Query";
+
+package simulator_query;
+
+import "google/protobuf/timestamp.proto";
+
+service RawDataQueryService {
+  rpc CreateAndSendTestOrder (CreateAndSendTestOrderRequest) returns (GetTestOrderResultsResponse);
+  
+  rpc GetTestOrderResults (GetTestOrderResultsRequest) returns (GetTestOrderResultsResponse);
+}
+
+message CreateAndSendTestOrderRequest {
+  string test_order_id = 1; 
+}
+
+message SendTestOrderResultsResponse {
+  bool success = 1;
+  string message = 2;
+  int32 items_sent_count = 3; 
+}
+
+message GetTestOrderResultsRequest {
+  string test_order_id = 1; 
+}
+
+message GetTestOrderResultsResponse {
+  string test_order_id = 1;
+  string instrument = 2;
+  google.protobuf.Timestamp performed_date = 3; 
+  repeated RawResultItem results = 4;
+}
+
+message RawResultItem {
+  string test_code = 1;
+  string parameter = 2;
+  optional double value_numeric = 3; 
+  optional string value_text = 4;
+  string unit = 5;
+  string reference_range = 6;
+  string status = 7;
+}

@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  simulator_service:
+    build:
+      context: ./Simulator_Service
+    container_name: simulator_service
+    ports:
+      - "5001:80"
+    depends_on:
+      - rabbitmq
+
+  monitoring_service:
+    build:
+      context: ./Monitoring_Service
+    container_name: monitoring_service
+    ports:
+      - "5002:80"
+    depends_on:
+      - rabbitmq
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=monitoring_sql;Database=MonitoringDb;User=sa;Password=YourPassword@123;
+
+  monitoring_sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: monitoring_sql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourPassword@123
+    ports:
+      - "1435:1433"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"

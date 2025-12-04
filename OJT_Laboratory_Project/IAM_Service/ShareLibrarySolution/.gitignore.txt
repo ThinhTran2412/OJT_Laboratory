@@ -1,0 +1,22 @@
+# Visual Studio temporary files
+*.obj
+*.exe
+*.dll
+*.pdb
+*.suo
+*.user
+*.bak
+*.vspscc
+*.vssscc
+*.svn
+
+# Visual Studio's hidden solution/project folder
+.vs/
+**/bin/
+**/obj/
+
+# NuGet packages
+packages/
+
+# Restore files
+*.log

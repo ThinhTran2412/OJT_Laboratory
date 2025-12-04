@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package warehouse_service;
+
+option csharp_namespace = "WareHouse_Service.API.Protos";
+
+service WarehouseService {
+	rpc ProcessTestOrder(ProcessTestOrderRequest) returns (ProcessTestOrderResponse);
+}
+
+message ProcessTestOrderRequest {
+	string order_id = 1;
+	string testType = 2;
+}
+
+message ProcessTestOrderResponse {
+	string test_order_id = 1;
+	string instrument = 2;
+	google.protobuf.Timestamp performed_date = 3;
+	repeated RawResultItem results = 4;
+}
+
+message RawResultItem {
+  string test_code = 1;
+  string parameter = 2;
+  optional double value_numeric = 3; 
+  optional string value_text = 4;
+  string unit = 5;
+  string reference_range = 6;
+  string status = 7;
+}
