@@ -1,0 +1,40 @@
+# Override file for Development environment
+# This file is automatically used by docker-compose when running in dev mode
+# To use production, rename this file or use docker-compose -f docker-compose.yml
+
+services:
+  iam-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    # Expose ports for direct access (for Swagger)
+    ports:
+      - "5001:8080"  # IAM Service direct access
+
+  laboratory-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    # Expose ports for direct access (for Swagger)
+    ports:
+      - "5002:8080"  # Laboratory Service direct access
+
+  monitoring-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    # Expose ports for direct access (for Swagger)
+    ports:
+      - "5003:8080"  # Monitoring Service direct access
+
+  simulator-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    # Expose ports for direct access (for Swagger)
+    ports:
+      - "5004:8080"  # Simulator Service direct access
+
+  warehouse-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    # Expose ports for direct access (for Swagger)
+    ports:
+      - "5005:8080"  # WareHouse Service direct access
+

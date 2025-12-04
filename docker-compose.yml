@@ -1,0 +1,210 @@
+services:
+  # PostgreSQL Database (Online from Render)
+  # Note: Services will connect to external PostgreSQL database
+  # Connection strings are configured in appsettings.Production.json files
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./OJT_Laboratory_Project/Front_End/dist:/usr/share/nginx/html:ro
+    depends_on:
+      iam-service:
+        condition: service_healthy
+      laboratory-service:
+        condition: service_healthy
+      monitoring-service:
+        condition: service_healthy
+      simulator-service:
+        condition: service_healthy
+      warehouse-service:
+        condition: service_healthy
+    networks:
+      - ojt_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # IAM Service
+  iam-service:
+    build:
+      context: ./OJT_Laboratory_Project
+      dockerfile: IAM_Service/IAM_Service.API/Dockerfile
+    container_name: iam_service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      # Connection string will be read from appsettings.Production.json
+      # Enable HTTP/2 unencrypted support for gRPC in Docker (both client and server)
+      - DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=1
+    expose:
+      - "8080"  # REST API (HTTP/1.1) - via Nginx
+      - "8081"  # gRPC (HTTP/2) - direct Docker network, no Nginx
+    networks:
+      - ojt_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Laboratory Service
+  laboratory-service:
+    build:
+      context: ./OJT_Laboratory_Project
+      dockerfile: Laboratory_Service/Laboratory_Service.API/Dockerfile
+    container_name: laboratory_service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      # Connection string will be read from appsettings.Production.json
+      - IAMService__GrpcUrl=http://iam-service:8081
+      - IAMService__BaseUrl=http://iam-service:8080
+      - WareHouseService__GrpcUrl=http://warehouse-service:8081
+      - WareHouseService__BaseUrl=http://warehouse-service:8080
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+      # Enable HTTP/2 unencrypted support for gRPC in Docker (both client and server)
+      - DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=1
+    expose:
+      - "8080"  # REST API (HTTP/1.1) - via Nginx
+      - "8081"  # gRPC (HTTP/2) - direct Docker network, no Nginx
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      iam-service:
+        condition: service_healthy
+      warehouse-service:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ojt_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Monitoring Service
+  monitoring-service:
+    build:
+      context: ./OJT_Laboratory_Project/Monitoring_Service
+      dockerfile: Monitoring_Service.API/Dockerfile
+    container_name: monitoring_service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      # Connection string will be read from appsettings.Production.json
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+      # Enable HTTP/2 unencrypted support for gRPC in Docker (both client and server)
+      - DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=1
+    expose:
+      - "8080"  # REST API (HTTP/1.1) - via Nginx
+      # Note: Monitoring Service doesn't expose gRPC endpoint, only REST API
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ojt_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Simulator Service
+  simulator-service:
+    build:
+      context: ./OJT_Laboratory_Project/Simulator_Service
+      dockerfile: Simulator.API/Dockerfile
+    container_name: simulator_service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      # Connection string will be read from appsettings.Production.json
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+      # Enable HTTP/2 unencrypted support for gRPC in Docker (both client and server)
+      - DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=1
+    expose:
+      - "8080"  # REST API (HTTP/1.1) - via Nginx
+      - "8081"  # gRPC (HTTP/2) - direct Docker network, no Nginx
+    depends_on:
+      - rabbitmq
+    networks:
+      - ojt_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # WareHouse Service
+  warehouse-service:
+    build:
+      context: ./OJT_Laboratory_Project
+      dockerfile: WareHouse_Service/WareHouse_Service.API/Dockerfile
+    container_name: warehouse_service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      # Connection string will be read from appsettings.Production.json
+      - GrpcSettings__SimulatorServiceUrl=http://simulator-service:8081
+      # Enable HTTP/2 unencrypted support for gRPC in Docker (both client and server)
+      - DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=1
+    expose:
+      - "8080"  # REST API (HTTP/1.1) - via Nginx
+      - "8081"  # gRPC (HTTP/2) - direct Docker network, no Nginx
+    depends_on:
+      simulator-service:
+        condition: service_healthy
+    networks:
+      - ojt_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - ojt_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  ojt_network:
+    driver: bridge

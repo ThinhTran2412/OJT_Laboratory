@@ -1,0 +1,29 @@
+# Git Configuration File
+# Edit this file to change repository URLs and branch names
+# Format: KEY=VALUE
+# Lines starting with # are comments and will be ignored
+
+# IAM_Service Configuration
+IAM_SERVICE_REPO_URL=https://git.fsoft-academy.edu.vn/hcm25_cpl_net_08/team04/laboratorymanagementproject.git
+IAM_SERVICE_BRANCH=develop
+
+# Laboratory_Service Configuration
+LABORATORY_SERVICE_REPO_URL=https://git.fsoft-academy.edu.vn/hcm25_cpl_net_08/team04/laboratoryservice.git
+LABORATORY_SERVICE_BRANCH=develop
+
+# Front_End Configuration
+FRONT_END_REPO_URL=https://git.fsoft-academy.edu.vn/hcm25_cpl_net_08/team04/IAM_Service_FrontEnd.git
+FRONT_END_BRANCH=develop
+
+# Monitoring_Service Configuration
+MONITORING_SERVICE_REPO_URL=https://git.fsoft-academy.edu.vn/hcm25_cpl_net_08/team04/monitoring_service.git
+MONITORING_SERVICE_BRANCH=develop
+
+# Simulator_Service Configuration
+SIMULATOR_SERVICE_REPO_URL=https://git.fsoft-academy.edu.vn/hcm25_cpl_net_08/team04/simulator_service.git
+SIMULATOR_SERVICE_BRANCH=develop
+
+# WareHouse_Service Configuration
+WAREHOUSE_SERVICE_REPO_URL=https://git.fsoft-academy.edu.vn/hcm25_cpl_net_08/team04/warehouseservice.git
+WAREHOUSE_SERVICE_BRANCH=develop
+
