@@ -221,7 +221,6 @@ if !COUNT! gtr 0 (
 
 echo.
 powershell -Command "Write-Host 'Clean completed successfully!' -ForegroundColor DarkGreen"
-pause
 exit /b 0
 
 
